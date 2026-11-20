@@ -1,0 +1,61 @@
+
+<section class="featured">
+  <div class="featured-image">
+    <img src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1200" alt="Beautiful ocean waves">
+  </div>
+  <div class="featured-content">
+    <span class="eyebrow">WELCOME TO OUR JOURNAL</span>
+    <h2>Discover Stories That Inspire</h2>
+    <p>Explore ideas, experiences, and moments worth sharing. Every story has something special to offer.</p>
+    <%= link_to "Read Our Posts", posts_path, class: "button" %>
+  </div>
+</section>
+
+<section class="recent-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">THE LATEST</span>
+      <h2>Recent Blog Posts</h2>
+      <p>Fresh thoughts and stories from our blog.</p>
+    </div>
+    <%= link_to "＋ New Post", new_post_path, class: "button" %>
+  </div>
+
+  <div class="post-grid">
+    <% @posts.each do |post| %>
+      <article class="post-card">
+        <div class="post-card-content">
+          <span class="post-category">BLOG ARTICLE</span>
+          <h3><%= link_to post.title, post %></h3>
+          <p><%= truncate(post.body, length: 150) %></p>
+          <%= link_to "Read More →", post, class: "read-more" %>
+        </div>
+      </article>
+    <% end %>
+  </div>
+
+  <% if @posts.empty? %>
+    <div class="empty-posts">
+      <h3>Your stories start here!</h3>
+      <p>Create your first blog post and share something interesting.</p>
+      <%= link_to "Create Your First Post", new_post_path, class: "button" %>
+    </div>
+  <% end %>
+</section>
+
+<section class="about-section">
+  <div>
+    <span class="eyebrow">OUR STORY</span>
+    <h2>About My First Blog</h2>
+    <p>This is a place for sharing knowledge, inspiration, experiences, and ideas. We believe every story deserves a space to be heard.</p>
+  </div>
+  <div class="about-icon">✦</div>
+</section>
+
+<section class="comments-section">
+  <span class="eyebrow">JOIN THE CONVERSATION</span>
+  <h2>Readers Make This Blog Special</h2>
+  <p>Have a thought about a post? Share your ideas and connect with our growing community.</p>
+  <%= link_to "Explore Articles", posts_path, class: "button" %>
+</section>
+
