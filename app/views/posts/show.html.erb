@@ -1,10 +1,108 @@
-<p style="color: green"><%= notice %></p>
+<style>
+  .article-page {
+    background: #f1f5fb;
+    padding: 35px 20px;
+    border-radius: 24px;
+    margin: 25px auto;
+  }
 
-<%= render @post %>
+  .article-card {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 42px 38px;
+    background: #fff;
+    border-radius: 28px;
+    color: #334155;
+  }
 
-<div>
-  <%= link_to "Edit this post", edit_post_path(@post) %> |
-  <%= link_to "Back to posts", posts_path %>
+  .article-label {
+    color: #168bd2;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
 
-  <%= button_to "Destroy this post", @post, method: :delete %>
+  .article-card h1 {
+    color: #14213d;
+    font-size: 42px;
+    margin: 28px 0 38px;
+  }
+
+  .article-content {
+    border-top: 2px solid #e5eaf2;
+    border-bottom: 2px solid #e5eaf2;
+    padding: 28px 0;
+    font-size: 22px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+
+  .article-content p {
+    margin: 12px 0 22px;
+  }
+
+  .article-content h2,
+  .article-content h3 {
+    color: #14213d;
+  }
+
+  .article-content ul,
+  .article-content ol {
+    padding-left: 30px;
+  }
+
+  .article-image {
+    display: block;
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+    background: #f8fafc;
+    border-radius: 16px;
+    margin: 0 auto 28px;
+  }
+
+  .article-back {
+    display: inline-block;
+    margin-top: 32px;
+    color: #168bd2;
+    font-size: 21px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .article-back:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    .article-card {
+      padding: 28px 22px;
+    }
+
+    .article-card h1 {
+      font-size: 34px;
+    }
+
+    .article-content {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<div class="article-page">
+  <article class="article-card">
+    <span class="article-label">BLOG ARTICLE</span>
+
+    <h1><%= @post.title %></h1>
+
+    <% if @post.image.attached? %>
+      <%= image_tag @post.image, class: "article-image", alt: @post.title %>
+    <% end %>
+
+    <div class="article-content">
+      <%= sanitize(@post.body, tags: %w[p br strong b em i u s h2 h3 ul ol li hr a blockquote font], attributes: %w[href face size style]) %>
+    </div>
+
+    <%= link_to "← Back to posts", posts_path, class: "article-back" %>
+  </article>
 </div>

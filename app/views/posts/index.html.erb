@@ -27,7 +27,7 @@
         <div class="post-card-content">
           <span class="post-category">BLOG ARTICLE</span>
           <h3><%= link_to post.title, post %></h3>
-          <p><%= truncate(post.body, length: 150) %></p>
+          <p><%= truncate(strip_tags(post.body), length: 150) %></p>
           <%= link_to "Read More →", post, class: "read-more" %>
         </div>
       </article>

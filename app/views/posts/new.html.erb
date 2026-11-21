@@ -1,11 +1,221 @@
-<% content_for :title, "New post" %>
+<% content_for :title, "Create a Story" %>
 
-<h1>New post</h1>
+<style>
+  .story-editor {
+    max-width: 850px;
+    margin: 45px auto;
+    background: #fff;
+    border: 1px solid #dce3ed;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(30, 60, 100, .10);
+    overflow: hidden;
+    color: #26354b;
+  }
+  .story-header {
+    background: #eaf1fc;
+    padding: 20px 26px;
+    border-bottom: 1px solid #dce5f2;
+  }
+  .story-header h1 {
+    margin: 0;
+    font-size: 23px;
+    color: #244875;
+  }
+  .story-subtitle {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 14px;
+  }
+  .story-fields { padding: 22px 26px 8px; }
+  .story-title {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #e1e6ed;
+    padding: 13px 2px;
+    font-size: 23px;
+    outline: none;
+    color: #26354b;
+    box-sizing: border-box;
+  }
+  .story-title:focus { border-bottom: 2px solid #3478df; }
+  .story-image-upload {
+    margin: 12px 26px 18px;
+    padding: 16px;
+    background: #f4f8ff;
+    border: 1px dashed #9bb9e5;
+    border-radius: 10px;
+  }
+  .story-image-upload label {
+    display: block;
+    margin-bottom: 8px;
+    color: #244875;
+    font-weight: 600;
+  }
+  .story-image-upload input {
+    max-width: 100%;
+    color: #52647d;
+  }
+  .story-image-help {
+    margin: 7px 0 0;
+    color: #718096;
+    font-size: 12px;
+  }
+  .story-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 13px 26px;
+    border-bottom: 1px solid #e7ebf0;
+    background: #fbfcfe;
+  }
+  .story-toolbar button, .story-toolbar select {
+    border: 1px solid #dce3ec;
+    background: white;
+    color: #34445c;
+    border-radius: 6px;
+    padding: 7px 10px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .story-toolbar button:hover {
+    background: #eaf1fc;
+    border-color: #8db4ed;
+  }
+  .story-writing {
+    min-height: 300px;
+    padding: 25px 28px;
+    outline: none;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #26354b;
+  }
+  .story-writing:empty:before {
+    content: "Start writing your story here...";
+    color: #a0aaba;
+    pointer-events: none;
+  }
+  .story-writing:focus { outline: none; }
+  .story-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 17px 26px;
+    border-top: 1px solid #e7ebf0;
+    background: #fbfcfe;
+  }
+  .publish-story {
+    border: 0;
+    border-radius: 24px;
+    background: #2468d5;
+    color: white;
+    padding: 12px 23px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .publish-story:hover { background: #174fae; }
+  .back-story { color: #45658d; text-decoration: none; }
+  .back-story:hover { text-decoration: underline; }
+  .story-errors {
+    margin: 18px 26px;
+    padding: 12px;
+    background: #fff0f0;
+    color: #a32626;
+    border-radius: 8px;
+  }
+</style>
 
-<%= render "form", post: @post %>
+<div class="story-editor">
+  <div class="story-header">
+    <h1>New Post ✨</h1>
+    <p class="story-subtitle">A fresh page for your thoughts, stories and ideas.</p>
+  </div>
 
-<br>
+  <%= form_with(model: @post, id: "story-form") do |form| %>
+    <% if @post.errors.any? %>
+      <div class="story-errors">
+        <strong><%= pluralize(@post.errors.count, "error") %> prevented this story from being published:</strong>
+        <ul>
+          <% @post.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-<div>
-  <%= link_to "Back to posts", posts_path %>
+    <div class="story-fields">
+      <%= form.text_field :title, class: "story-title", placeholder: "Give your story a title...", required: true %>
+    </div>
+
+    <div class="story-image-upload">
+      <%= form.label :image, "Upload Article Picture 📷" %>
+      <%= form.file_field :image, accept: "image/*" %>
+      <p class="story-image-help">Choose a picture to appear inside your published article.</p>
+    </div>
+
+    <div class="story-toolbar">
+      <button type="button" data-command="bold"><b>B</b></button>
+      <button type="button" data-command="italic"><i>I</i></button>
+      <button type="button" data-command="underline"><u>U</u></button>
+      <button type="button" data-command="strikeThrough"><s>S</s></button>
+      <select id="story-font" aria-label="Font">
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Courier New">Courier New</option>
+      </select>
+      <select id="story-size" aria-label="Text size">
+        <option value="3">Normal</option>
+        <option value="2">Small</option>
+        <option value="4">Large</option>
+        <option value="5">Extra large</option>
+      </select>
+      <button type="button" data-command="formatBlock" data-value="h2">Heading</button>
+      <button type="button" data-command="insertUnorderedList">• List</button>
+      <button type="button" data-command="insertOrderedList">1. List</button>
+      <button type="button" data-command="insertHorizontalRule">― Line</button>
+      <button type="button" data-command="undo">↶</button>
+      <button type="button" data-command="redo">↷</button>
+    </div>
+
+    <div id="story-writing" class="story-writing" contenteditable="true" role="textbox" aria-label="Write your story"></div>
+    <%= form.hidden_field :body, id: "story-body" %>
+
+    <div class="story-footer">
+      <%= link_to "← Back to posts", posts_path, class: "back-story" %>
+      <%= form.submit "Publish Story ✨", class: "publish-story" %>
+    </div>
+  <% end %>
 </div>
+
+<script>
+  (() => {
+    const editor = document.getElementById("story-writing");
+    const form = document.getElementById("story-form");
+    const body = document.getElementById("story-body");
+    if (!editor || !form || editor.dataset.ready) return;
+    editor.dataset.ready = "true";
+
+    document.querySelectorAll(".story-toolbar button[data-command]").forEach(button => {
+      button.addEventListener("click", () => {
+        editor.focus();
+        document.execCommand(button.dataset.command, false, button.dataset.value || null);
+      });
+    });
+
+    document.getElementById("story-font").addEventListener("change", event => {
+      editor.focus();
+      document.execCommand("fontName", false, event.target.value);
+    });
+
+    document.getElementById("story-size").addEventListener("change", event => {
+      editor.focus();
+      document.execCommand("fontSize", false, event.target.value);
+    });
+
+    form.addEventListener("submit", () => {
+      body.value = editor.innerHTML;
+    });
+  })();
+</script>
